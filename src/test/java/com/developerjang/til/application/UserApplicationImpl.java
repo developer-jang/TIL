@@ -25,6 +25,14 @@ public class UserApplicationImpl {
     private CompanyRepository companyRepository;
 
     @Test
+    void 회사_생성_테스트_케이스() {
+        Company company = Company.builder()
+                .build();
+
+        companyRepository.save(company);
+    }
+
+    @Test
     void 유저_생성_테스트_케이스() {
         User user =  User.builder()
                 .id("wkdwnsghks")
