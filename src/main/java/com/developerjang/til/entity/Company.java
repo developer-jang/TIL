@@ -1,7 +1,9 @@
 package com.developerjang.til.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -19,13 +21,15 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Company {
 
     @Id
     @GeneratedValue(generator = "system-uuid2")
     @GenericGenerator(name = "system-uuid2", strategy = "uuid2")
-    @Column(name = "companyId", length = 50)
-    private String companyId;
+    @Column(length = 50)
+    private String id;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     private Set<User> users;

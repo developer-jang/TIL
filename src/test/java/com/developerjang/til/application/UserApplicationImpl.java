@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
-
+import org.springframework.util.ObjectUtils;
 
 @Slf4j
 @ActiveProfiles("local")
@@ -34,8 +34,8 @@ public class UserApplicationImpl {
 
     @Test
     void 유저_생성_테스트_케이스() {
-        User user =  User.builder()
-                .id("wkdwnsghks")
+        User user = User.builder()
+                .userId("wkdwnsghks")
                 .password("111111")
                 .build();
 
@@ -51,12 +51,24 @@ public class UserApplicationImpl {
 
         Company createCompany = companyRepository.save(company);
 
-        User user =  User.builder()
-                .id("wkdwnsghks")
+        User user = User.builder()
+                .userId("wkdwnsghks")
                 .password("111111")
                 .company(createCompany)
                 .build();
 
         userRepository.save(user);
+    }
+
+    @Test
+    @Rollback(false)
+    void 회사_삭제시_cascade로_user_삭제_확인_테스트_케이스() {
+        User user = userRepository.findByUserId("wkdwnsghks").orElse(null);
+        if (!ObjectUtils.isEmpty(user)) {
+            Company company = user.getCompany();
+            log.debug(String.format("company_id : %s", company.getId()));
+            log.debug(String.format("user_id : %s", user.getId()));
+            companyRepository.delete(company);
+        }
     }
 }
