@@ -5,18 +5,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.Set;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "m_company")
@@ -25,7 +24,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Company {
+public class CompanyRecruits {
 
     @Id
     @GeneratedValue(generator = "system-uuid2")
@@ -33,14 +32,19 @@ public class Company {
     @Column(length = 50)
     private String id;
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-    private Set<User> users;
+    @Column(name = "recruit_user_subject")
+    private String recruitSubject;
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-    private Set<CompanySupportHistory> supportHistories;
+    //TODO : 채용 공고 BLOB?
 
-    @ManyToOne
-    @JoinColumn(name="id")
-    private CompanyRecruits companyRecruits;
+    @Column(name = "recruit_user_count")
+    @ColumnDefault("0")
+    private Long recruitUserCount;
+
+    @CreationTimestamp
+    private LocalDateTime createDt;
+
+    @UpdateTimestamp
+    private LocalDateTime updateDt;
 
 }

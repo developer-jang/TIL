@@ -2,8 +2,10 @@ package com.developerjang.til.application;
 
 import com.developerjang.til.TilApplication;
 import com.developerjang.til.entity.Company;
+import com.developerjang.til.entity.CompanySupport;
 import com.developerjang.til.entity.User;
 import com.developerjang.til.infra.repository.CompanyRepository;
+import com.developerjang.til.infra.repository.CompanySupportRepository;
 import com.developerjang.til.infra.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -23,6 +25,9 @@ public class UserApplicationImpl {
 
     @Autowired
     private CompanyRepository companyRepository;
+
+    @Autowired
+    private CompanySupportRepository companySupportRepository;
 
     @Test
     void 회사_생성_테스트_케이스() {
@@ -58,6 +63,30 @@ public class UserApplicationImpl {
                 .build();
 
         userRepository.save(user);
+    }
+
+    @Test
+    @Rollback(false)
+    void 회사_유저_지원이력_생성_테스트_케이스() {
+
+        Company company = Company.builder()
+                .build();
+
+        Company createCompany = companyRepository.save(company);
+
+        User user = User.builder()
+                .userId("wkdwnsghks")
+                .password("111111")
+                .company(createCompany)
+                .build();
+
+        userRepository.save(user);
+
+        CompanySupport companySupport = CompanySupport.builder()
+                .user(user)
+                .company(company)
+                .build();
+        companySupportRepository.save(companySupport);
     }
 
     @Test
